@@ -269,4 +269,6 @@ int main() {
     bank.atualizacaoMensal();
     cout << bank;
 
+    return 0;
+
 }
