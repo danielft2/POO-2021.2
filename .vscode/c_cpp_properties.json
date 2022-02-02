@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Windows",
+            "intelliSenseMode": "gcc-x86",
+            "compilerPath": "D:\\mingw64\\bin",
+            "includePath": [
+                "D:\\Users\\danie_ag851h8\\Documents\\sfml\\include\\SFML"
+            ],
+            "cStandard": "gnu11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
