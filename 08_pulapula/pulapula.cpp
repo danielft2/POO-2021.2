@@ -6,11 +6,27 @@
 using namespace std;
 
 class Crianca {
-public:
+private:
     string nome;
     int idade;
-   
+public:
     Crianca(string nome, int idade) : nome {nome}, idade {idade} {
+    }
+
+    string getNome() {
+        return this->nome;
+    }
+
+    int getIdade() {
+        return this->idade;
+    }
+
+    void setNome(string novoNome) {
+        this->nome = novoNome;
+    }
+
+    void setIdade(int novaIdade) {
+        this->idade = novaIdade;
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Crianca& crianca) {
@@ -55,7 +71,7 @@ public:
     shared_ptr<Crianca> papai_chegou(string nome) {
         int i = 0;
         for (auto crianca : pulando) {
-            if (crianca->nome == nome) {
+            if (crianca->getNome() == nome) {
                 pulando.erase(next(this->pulando.begin(), i));
                 return crianca;
             }
@@ -66,7 +82,7 @@ public:
         i = 0;
 
         for (auto crianca : espera) {
-            if (crianca->nome == nome) {
+            if (crianca->getNome() == nome) {
                 espera.erase(next(this->espera.begin(), i));
                 return crianca;
             }
@@ -114,7 +130,6 @@ int main() {
     cout << pulaPula << "\n\n";
 
     //COLOCANDO NO PULA PULA
-    cout << pulaPula << "\n";
     pulaPula.pular();
     cout << pulaPula << "\n";
     pulaPula.pular();
@@ -127,7 +142,7 @@ int main() {
 
     //O PAPAI CHEGOU
     cout << pulaPula << "\n";
-    shared_ptr<Crianca> c = pulaPula.papai_chegou("luana");
+    auto c = pulaPula.papai_chegou("luana");
     cout << pulaPula << "\n\n";
 
     //TENTANDO PULAR SEM TER NINGUEM

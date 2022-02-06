@@ -235,7 +235,7 @@ int main() {
     contact2.addFone(Fone("tim", "(88)99"));
     contact2.addFone(Fone("vivo", "99.779.22"));
     
-
+    
     cout << "Adicionando o mesmo contato: \n";
     agenda.addContact(contact);
     cout << agenda;

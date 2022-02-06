@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 #include <sstream>
+#include <list>
 
 
 using namespace std;
@@ -66,8 +67,7 @@ public:
             if (!tweet.rt->deletado) 
                 os << "\n" << "   " <<  *tweet.rt;
             else 
-                os << "\n" << "  " << "O rt foi deletado\n";
-            
+                os << "\n" << "  " << "O rt foi deletado\n";     
         }
     
         return os;
@@ -75,10 +75,9 @@ public:
 };  
 
 class Inbox {
-    
+    map<int, Tweet*> timeLine;
     map<int, Tweet*> meusTweets;
 public:
-    map<int, Tweet*> timeLine;
     Inbox() {
     }
     
@@ -126,11 +125,18 @@ public:
            throw runtime_error("Mensagem nao encontrada\n");
         return it->second;
     }
+
     
     friend std::ostream& operator<<(std::ostream& os, const Inbox& inbox) {
-        for (auto tweet : inbox.getTimeLine()) {
+        list<Tweet*> timelineOrdem;
+        for (auto tweet : inbox.timeLine) {
+            timelineOrdem.push_front(tweet.second);
+        }
+        
+        for (auto tweet : timelineOrdem) {
             os << *tweet << "\n";
         }
+        
         os << "\n";
         return os;
     }
@@ -231,6 +237,9 @@ public:
                 os << ", " << seguidor.second->nome;
             cont++;
         }
+
+        cont = 0;
+        
         os << "]\n";
         os << "  Seguidores: [";
         for (auto& seguidor : user.seguidores) {
@@ -247,14 +256,15 @@ public:
 };
 
 class Controle {
+private:
     map<string, shared_ptr<Usuario>> usuarios;
-    map<string, shared_ptr<Tweet>> tweets;
+    vector<shared_ptr<Tweet>> tweets;
     
     int proximoId {0};
 
     Tweet* criarTweet(string nome, string msg) {
         auto tweet = make_shared<Tweet>(this->proximoId, nome, msg);
-        tweets[nome] = tweet;
+        tweets.push_back(tweet);
         this->proximoId++;
         return tweet.get();
     }
@@ -321,32 +331,70 @@ int main() {
     system("cls");
     Controle controle;
  
-    controle.addUsuario("goku");
-    controle.addUsuario("sara");
-    controle.addUsuario("tina");
+    while (true) {
+        string linha{}, cmd{};
+        getline(cin, linha);
+        stringstream ss(linha);
+        ss >> cmd;
+        cout << "$" << linha << "\n\n";
+        try {
+            if (cmd == "add") {
+                string nome{};
+                ss >> nome;
+                controle.addUsuario(nome);
+            } else if (cmd == "show") {
+                system("cls");
+                cout << controle;
+            } else if (cmd == "timeline") {
+                string nome{};
+                ss >> nome;
+                auto user = controle.buscarUser(nome);
+                cout << user->getInbox();
+            } else if (cmd == "twittar") {
+                string nome{}, msg{};
+                ss >> nome;
+                getline(ss, msg);
+                controle.enviarTweet(nome, msg.substr(1));
+            } else if (cmd == "rt") {
+                string nome{}, msg{};
+                int id {};
+                ss >> nome >> id;
+                getline(ss, msg);
+                controle.enviarRt(nome, id, msg.substr(1));
+            } else if (cmd == "end") {
+                break;
+            } else if (cmd == "seguir") {
+                string nome1{}, nome2{};
+                ss >> nome1 >> nome2;
+                auto seguidor = controle.buscarUser(nome1);
+                auto seguido = controle.buscarUser(nome2);
+                seguidor->seguir(seguido);
+            } else if (cmd == "paraSeguir") {
+                string nome1{}, nome2{};
+                ss >> nome1 >> nome2;
+                auto user = controle.buscarUser(nome1);
+                auto seguido = controle.buscarUser(nome2);
+                user->deixarDeSeguir(seguido);
+            }  else if (cmd == "remover") {
+                string nome{};
+                ss >> nome;
+                controle.remove(nome);
+            } else if (cmd == "like") {
+                string nome{}; int id{};
+                ss >> nome >> id;
+                auto user = controle.buscarUser(nome);
+                user->like(id);
+            } else if (cmd == "clear") {
+                system("cls");
+            } else {
+                cout << "Comando invalido\n";
+            }
+            
+        } catch (runtime_error &e) {
+            cout << e.what() << "\n";
+        }
+    }
 
-    auto goku = controle.buscarUser("goku");
-    auto sara = controle.buscarUser("sara");
-    auto tina = controle.buscarUser("tina");
-
-    goku->seguir(sara);
-    goku->seguir(tina);
-    sara->seguir(tina);
-    sara->seguir(goku);
-
-    controle.enviarTweet("tina", "bom final de semana guys");
-    controle.enviarTweet("goku", "Bom diaa");
-    controle.enviarRt("sara", 0, "pra voce tambem");
- 
-  
-    cout << controle;
-    cout << goku->getInbox();
-    cout << sara->getInbox();
-
-    controle.remove("tina");
-    cout << controle;
-    
-    cout << goku->getInbox();
   
      
     return 0;

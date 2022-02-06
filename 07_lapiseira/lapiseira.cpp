@@ -6,11 +6,11 @@
 using namespace std;
 
 class Grafite {
-public:
+private:
     float calibre;
     string dureza;
     int tamanho;
-
+public:
     Grafite(float calibre = 0, string dureza = "", int tamanho = 0) : 
         calibre {calibre}, dureza {dureza}, tamanho {tamanho} {
     }
@@ -24,6 +24,22 @@ public:
             this->tamanho-=4;
         else if (this->dureza == "6B")
             this->tamanho-=6;
+    }
+
+    float getCalibre() {
+        return this->calibre;
+    }
+
+    string getDureza() {
+        return this->dureza;
+    }
+
+    int getTamanho() {
+        return this->tamanho;
+    }
+
+    void setTamanho(int tam) {
+        this->tamanho = tam;
     }
 
     friend ostream& operator<<(ostream& os, const Grafite& grafite) {
@@ -46,7 +62,7 @@ public:
     }
     
     bool inserir (shared_ptr<Grafite> grafite) {
-        if (grafite->calibre != this->calibre) {
+        if (grafite->getCalibre() != this->calibre) {
             cout << "calibre nao compativel.\n";
             return false;
         }
@@ -78,15 +94,15 @@ public:
     void escreveFolha() {
         if (this->bico == nullptr) {
             cout << "Nao existe um grafite no bico.\n";
-        } else if (this->bico->tamanho <= 10) {
+        } else if (this->bico->getTamanho() <= 10) {
             cout << "Nao e mais possivel escrever com esse grafite.\n";
         } else {
             this->bico->desgastePorFolha();
-            if (this->bico->tamanho < 10) {
+            if (this->bico->getTamanho() < 10) {
                 cout << "Nao houve grafite suficiente para terminar a folha.\n";
-                int resto = 10 - this->bico->tamanho;
-                this->bico->tamanho + resto;
-            } else if (this->bico->tamanho == 10) {
+                int resto = 10 - this->bico->getTamanho();
+                this->bico->setTamanho(resto + this->bico->getTamanho());
+            } else if (this->bico->getTamanho() == 10) {
                 cout << "Grafite acabou.\n";
             }     
         }   
@@ -117,43 +133,17 @@ int main() {
     
     //INSERINDO GRAFITE
     cout << lapiseira << "\n";
-    lapiseira.inserir(make_shared<Grafite>(0.5, "4B", 30));
-    lapiseira.inserir(make_shared<Grafite>(0.7, "HB", 50));
-    lapiseira.inserir(make_shared<Grafite>(0.5, "6B", 20));
-    cout << lapiseira << "\n\n";
-
-    //PUXANDO GRAFITE DA LAPISEIRA
-    lapiseira.puxarGrafite();
-    cout << lapiseira;
-    lapiseira.puxarGrafite();
-    cout << "\n";
-
-    //REMOVENDO DO BICO
-    cout << lapiseira << "\n";
-    shared_ptr<Grafite> g = lapiseira.removerGrafite();
-    cout << lapiseira << "\n\n";
-
-    //ESCREVENDO COM O GRAFITE
-    cout << lapiseira << "\n";
-    lapiseira.puxarGrafite();
-    lapiseira.escreveFolha();
-    cout << lapiseira << "\n\n";
-    
-    //ESCREVENDO COM GRAFITE
-    cout << lapiseira << "\n";
-    lapiseira.escreveFolha();
-    lapiseira.escreveFolha();
-    cout << "\n";
-
-    shared_ptr<Grafite> b = lapiseira.removerGrafite();
-    cout << lapiseira << "\n";
-    
-    //GRAFITE ACABOU
     lapiseira.inserir(make_shared<Grafite>(0.5, "4B", 14));
-    cout << lapiseira << "\n";
+    lapiseira.inserir(make_shared<Grafite>(0.5, "4B", 20));
     lapiseira.puxarGrafite();
+    
+    lapiseira.escreveFolha();
     cout << lapiseira << "\n";
     lapiseira.escreveFolha();
+    cout << lapiseira << "\n";
+
+    auto grafite = lapiseira.removerGrafite();
+    lapiseira.puxarGrafite();
     cout << lapiseira << "\n";
 }
 

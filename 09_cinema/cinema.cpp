@@ -60,9 +60,9 @@ public:
         } else {
             if (ind > cadeiras.size() || ind < 0)
                 cout << "A cadeira nao existe, informe outra.\n";
-            else if (cadeiras[ind] != nullptr) {
+            else if (cadeiras[ind] != nullptr) 
                 cout << "A cadeira ja esta reservada.\n";
-            } else 
+            else 
                 cadeiras[ind] = cliente;
         }
     }
@@ -73,6 +73,10 @@ public:
                 cadeiras[i] = nullptr;
             }     
         }
+    }
+
+    vector<shared_ptr<Cliente>> getCadeiras() {
+        return this->cadeiras;
     }
     
     friend std::ostream& operator<<(std::ostream& os, const Sala& sala) {

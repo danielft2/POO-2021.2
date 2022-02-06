@@ -13,6 +13,14 @@ struct Pessoa
         nome {nome}, idade {idade} {
     }
 
+    string getNome() {
+        this->nome;
+    }
+
+    int getIdade() {
+        this->idade;
+    }
+
     friend std::ostream& operator<<(std::ostream& os, const Pessoa& pessoa) {
         os << "Pessoa: " << "[" << pessoa.nome << ":" << pessoa.idade << "]" << "\n";
     }
@@ -65,7 +73,7 @@ struct Motoca
     }
 
     void comprarTempo(int time) {
-        this->minutos = time;
+        this->minutos = time + this->minutos;
     }
 
     void drive(int time) {
@@ -93,6 +101,18 @@ struct Motoca
         } else {
             cout << "A moto esta vazia.\n";
         }
+    }
+
+    Pessoa* getPesssoa() {
+        return this->pessoa;
+    }
+
+    int getPotencia() {
+        return this->potencia;
+    }
+
+    int getTempo() {
+        return this->minutos;
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Motoca& motoca) {

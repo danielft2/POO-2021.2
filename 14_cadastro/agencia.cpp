@@ -2,6 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <sstream>
 
 using namespace std;
 
@@ -195,7 +196,7 @@ public:
 
     void addCliente(string idCliente) {     
         if (buscaCliente(idCliente)) {
-            cout << "O cliente ja existe\n";
+            throw runtime_error("O cliente ja existe.\n");
         } else {
             criarCliente(idCliente); 
         }
@@ -206,7 +207,7 @@ public:
         if (conta != nullptr) {
             conta->deposito(valor);
         } else {
-            cout << "Conta nao encontrada\n";
+            throw runtime_error("conta nao encontrada.\n");
         }
 
     }
@@ -216,7 +217,7 @@ public:
         if (conta != nullptr) {
             conta->saque(valor);
         } else {
-            cout << "Conta nao encontrada.\n";
+            throw runtime_error("conta nao encontrada.\n");
         }
     }
 
@@ -227,7 +228,7 @@ public:
         if (contaRe != nullptr && contaDes != nullptr) {
             contaRe->transferencia(contaDes, valor);
         } else {
-            cout << "Insira contas validas.\n";
+            throw runtime_error("conta nao validas.\n");
         }
     }
 
@@ -255,19 +256,45 @@ public:
 int main() {
     system("cls");
     AgenciaBancaria bank;
-    bank.addCliente("Daniel");
-    bank.addCliente("Luana");
-    bank.deposito(1, 1200.55);
-    cout << bank << "\n";
+    
+    while (true) {
+        string linha{}, cmd{};
+        getline(cin, linha);
+        stringstream ss(linha);
+        ss >> cmd;
+        cout << "$" << linha << "\n\n";
+        try {
+            if (cmd == "add") {
+                string nome{};
+                ss >> nome;
+                bank.addCliente(nome);
+            } else if (cmd == "deposito") {
+                int conta{}, valor{};
+                ss >> conta >> valor;
+                bank.deposito(conta, valor);
+            } else if (cmd == "show") {
+                system("cls");
+                cout << bank << "\n";
+            } else if (cmd == "saque") {
+                int conta{}, valor{};
+                ss >> conta >> valor;
+                bank.saque(conta, valor);
+            } else if (cmd == "transf") {
+                int contaManda{}, valor{}, contaRecebe{};
+                ss >> contaManda >> contaRecebe >> valor;
+                bank.transferencia(contaManda, contaRecebe, valor);
+            } else if (cmd == "end") {
+                break;
+            } else if (cmd == "atualizar") {
+                bank.atualizacaoMensal();
+            } else {
+                cout << "Comando invalido\n";
+            }
+        } catch (runtime_error &e) {
+            cout << e.what() << "\n";
+        }
+    }
 
-    bank.saque(1, 800);
-    bank.deposito(2, 555.95);
-    cout << bank << "\n";
-
-    bank.transferencia(3, 2, 230.65);
-    bank.addCliente("Maria");
-    bank.atualizacaoMensal();
-    cout << bank;
 
     return 0;
 

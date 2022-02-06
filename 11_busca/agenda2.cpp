@@ -207,6 +207,10 @@ public:
         return nullptr;
     }
 
+    vector<Contact> getContatos() {
+        return this->contatos;
+    }
+
     friend ostream& operator<<(ostream& os, const Agenda& agenda) {
         if (agenda.contatos.empty()) {
             os << "[AGENDA VAZIA]\n";

@@ -3,9 +3,9 @@
         {
             "name": "Windows",
             "intelliSenseMode": "gcc-x86",
-            "compilerPath": "D:\\mingw64\\bin",
+            "compilerPath": "D:\\mingw64\\bin\\gcc",
             "includePath": [
-                "D:\\Users\\danie_ag851h8\\Documents\\sfml\\include\\SFML"
+                "D:\\Users\\danie_ag851h8\\Documents\\sfml\\include"
             ],
             "cStandard": "gnu11",
             "cppStandard": "c++17"
